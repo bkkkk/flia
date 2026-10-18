@@ -1,15 +1,89 @@
 [project]
 name = "flia"
-version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.12"
+dynamic = ["version"]
+description = "privacy and ownership focus place for families to share."
+authors = [{ name = "bkkkk", email = "jayb88@gmail.com" }]
 dependencies = [
     "fastapi>=0.143.3",
 ]
 
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+
+keywords = [
+    "family",
+    "sharing"
+]
+
 [dependency-groups]
 dev = [
-    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
     "ruff>=0.17.1",
+]
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+bump = true
+fallback-version = "0.0.0"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+timeout = 10
+env = [
+    "RELAY_TEST_MODE=1",
+]
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+]
+pythonpath = ["."]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.ruff.lint]
+fixable = ["ALL"]
+ignore = [
+    "COM812",
+    "PLR0913", # Too many arguments
+    "SIM102", # Dont require combining if statements
+]
+extend-select = [
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "I", # isort
+    "PIE", # flake8-pie
+    "RUF", # Ruff-specific
+    "SIM", # flake8-simplify
+    "UP", # pyupgrade
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "I001"]
+"tests/**/*.py" = ["S101"] # Allow assert in tests
+"src/relay/api/**/*.py" = ["B008"] # Allow Depends() and File() in FastAPI route defaults
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", "sandbox/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
 ]
