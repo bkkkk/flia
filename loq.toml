@@ -10,9 +10,3 @@ respect_gitignore = true
 
 # ignore files or paths
 exclude = [".git/**", "**/generated/**", "*.lock"]
-
-# Agent-facing files can use approximate token budgets.
-# Tokens are estimated as bytes / 4, rounded up.
-[[rules]]
-path = "prompts/**/*.md"
-max_tokens = 8000
